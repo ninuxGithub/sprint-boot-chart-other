@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Angular JS</title>
+<script type="text/javascript" src="angular.min.js"></script>
+<style type="text/css">
+input.ng-invalid {
+	background-color: lightblue;
+}
+</style>
+</head>
+<body>
+
+	<div ng-app="myApp" ng-controller="appCtrl">
+
+
+		<p>{{1234567.123456 | number:5}}</p>
+		<p>{{1234567.123456 | number}}</p>
+
+		<p>{{myUrl}}</p>
+
+		<!-- 		<p>{{requestData}}</p> -->
+
+		<p>{{myHeader}}</p>
+
+		<p>{{currentTime}}</p>
+
+		<p>{{hex}}</p>
+		
+		<ul ng-repeat="x in ajaxData">
+			<li>{{x.Name}}</li>
+			<li>{{x.Url}}</li>
+			<li>{{x.Country}}</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+		var app = angular.module('myApp',[]);
+		//自定义指令
+		app.directive('myDirective',function(){
+			return {
+				template: '<h2>this is self define directive</h2>'
+			};
+		});
+		app.service("toHex" ,function(){
+			this.myService = function(x){
+				return x.toString(16);
+			}
+		});
+		//控制器
+		app.controller('appCtrl',function($scope,$rootScope,$location,$http,$timeout,$interval,toHex){
+			$scope.firstName = 'doc-angular-js';
+
+			$scope.names=[{'name':'Jani6','contry':'Norway1'},
+			              {'name':'Jani4','contry':'Norway2'},
+			              {'name':'Jani2','contry':'Norway3'},
+			              {'name':'Jani1','contry':'Norway4'}];
+
+			//跟作用域
+            $rootScope.lastName = ".js"
+
+            $scope.amount = 100;
+            $scope.price=12.345;
+
+            $scope.myUrl = $location.absUrl();
+
+//             $http.get('https://www.baidu.com').then(function(response){
+// 					$scope.requestData = response.data;	
+//             });
+
+			$scope.myHeader = "hello this world";
+			$timeout(function(){
+				$scope.myHeader =" i am comming !"
+				},2000);
+
+			$scope.currentTime = new Date().toLocaleTimeString();
+			$interval(function(){
+				$scope.currentTime = new Date().toLocaleTimeString();
+			},1000);
+
+			//自定义服务
+			$scope.hex = toHex.myService(225);
+
+			header('Access-Control-Allow-Origin:*'); 
+			$http.get('http://www.runoob.com/try/angularjs/data/sites.php').success(function(response){
+				$scope.ajaxData = response.data;
+			});
+				
+			
+		});
+
+		
+
+		
+	</script>
+
+</body>
+</html>

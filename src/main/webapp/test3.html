@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Angular JS</title>
+<script type="text/javascript" src="angular.min.js"></script>
+<style type="text/css">
+input.ng-invalid{
+	background-color:lightblue;
+}
+
+table,th,td{
+	border:1px solid grey;
+	border-collapse: collapse;
+	padding: 5px;
+}
+table tr:nth-child(odd){
+	background-color: lightblue;
+}
+table tr:nth-child(even){
+	background-color: lightpink;
+}
+</style>
+</head>
+<body>
+
+	<div ng-app="myApp" ng-controller="appCtrl" >
+		<p>Name is {{firstName}}-Script</p><br/>
+		
+		<p>input test:<input type="text" ng-model="inputStr"/></p>
+		
+		<p>the test you'd type :{{inputStr}}</p>
+		
+		<p>循环数组</p>
+		<ul>
+			<li ng-repeat="x in names">
+				{{x.name+'----'+x.contry}}
+			</li>
+		</ul>
+		
+		<table border="1" cellspacing="0" >
+		<caption>order by name</caption>
+			<tr>
+				<th>行号</th>
+				<th>姓名</th>
+				<th>国家</th>
+			</tr>
+			<tr ng-repeat=" x in names | orderBy :'name'">
+				<td>{{$index +1}}</td>
+				<td>{{x.name}}</td>
+				<td>{{x.contry | lowercase}} {{lastName | uppercase}}</td>
+			</tr>
+		</table>
+		
+		<p>自定义指令</p>
+		<my-directive></my-directive>
+		
+		<p>邮箱的校验</p>
+		<form name="myForm">
+		Email:<input type="email" name="emailAddress" ng-model="text" required/>
+		<span ng-show="myForm.emailAddress.$error.email" >不是一个合法的邮箱地址</span>
+		<span>valid :{{myForm.emailAddress.$valid}} 输入的值是否是合法的值</span>		
+		<span>valid :{{myForm.emailAddress.$dirty}} 值改变</span>		
+		<span>valid :{{myForm.emailAddress.$touched}} 触摸</span>		
+		</form>
+		
+		<p> 自定义价格显示单位 ：price is :{{ price * amount | currency : "RMB ￥"}}</p>
+		
+		<p>{{1554375948024 | date :"yyyy-MM-dd hh:mm:ss"}}</p>
+		
+		<p>{{1234567 | number}}</p>
+		
+		
+	</div>
+	
+	<script type="text/javascript">
+		var app = angular.module('myApp',[]);
+		//自定义指令
+		app.directive('myDirective',function(){
+			return {
+				template: '<h2>this is self define directive</h2>'
+			};
+		});
+		//控制器
+		app.controller('appCtrl',function($scope,$rootScope){
+			$scope.firstName = 'doc-angular-js';
+
+			$scope.names=[{'name':'Jani6','contry':'Norway1'},
+			              {'name':'Jani4','contry':'Norway2'},
+			              {'name':'Jani2','contry':'Norway3'},
+			              {'name':'Jani1','contry':'Norway4'}];
+
+			//跟作用域
+            $rootScope.lastName = ".js"
+
+            $scope.amount = 100;
+            $scope.price=12.345;
+			
+		});
+
+		
+
+		
+	</script>
+
+</body>
+</html>

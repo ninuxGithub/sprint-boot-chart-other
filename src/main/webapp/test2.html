@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Angular JS</title>
+<script type="text/javascript" src="angular.min.js"></script>
+
+</head>
+<body>
+
+	<div ng-app="myApp" ng-controller="appCtrl">
+		<p>{{ajaxData}}</p>
+
+		<!-- 这两种模式好像不能够共存 -->
+		<select ng-model="selectSite" ng-options="x.site for x in sites" /> <select
+			ng-model="selectItem">
+			<option ng-repeat="x in sites" value="{{x.url}}">{{x.site}}</option>
+		</select>
+
+		<p>你选择的是：{{selectItem}}</p>
+		<p>你选择的是：{{selectSite.url}}---{{selectSite.site}}</p>
+
+		<form novalidate="novalidate">
+			firstName :<input ng-model="user.firstName" type="text" /><br />
+			lastName :<input ng-model="user.lastName" type="text" /><br />
+			<button ng-click="reset()">reset</button>
+		</form>
+
+		<form name="testForm">
+			<span> 用户名：<br /> <input type="text" ng-model="user.userName"
+				name="userName" required="required" /> <span style="color: red;"
+				ng-show="testForm.userName.$dirty && testForm.userName.$invalid">
+					<span ng-show="testForm.userName.$error.required">用户名是必须的</span>
+			</span>
+			</span><br /> <span> 邮箱：<br />
+			<input type="email" ng-model="user.email" name="email"
+				required="required" /> <span style="color: red;"
+				ng-show="testForm.email.$dirty && testForm.email.$invalid"> <span
+					ng-show="testForm.email.$error.required">邮箱是必须的</span> <span
+					ng-show="testForm.email.$error.email">邮箱格式不正确</span>
+			</span>
+			</span>
+		</form>
+
+	</div>
+
+	<script type="text/javascript">
+		var app = angular.module('myApp',[]);
+		
+		app.controller('appCtrl',function($scope,$rootScope,$http){
+			//header('Access-Control-Allow-Origin:*'); 
+// 			$http.get('http://www.runoob.com/try/angularjs/data/sites.php').success(function(response){
+// 				$scope.ajaxData = response.data;
+// 			});
+
+			$scope.ajaxData ='noData';
+
+			$scope.names = ["Java","Php","Delph"];
+			$scope.names2 = ["Java1","Php1","Delph1"];
+			$scope.sites = [
+			                {site : "Google", url : "http://www.google.com"},
+			                {site : "Runoob", url : "http://www.runoob.com"},
+			                {site : "Taobao", url : "http://www.taobao.com"}
+			            ];
+
+            $scope.master = {firstName :'java', lastName:'script', email:'12324@qq.com',userName:'doc'}; 
+
+            $scope.reset = function(){
+				$scope.user = angular.copy($scope.master);
+            };
+
+            $scope.reset();
+				
+		});
+		
+	</script>
+</body>
+</html>

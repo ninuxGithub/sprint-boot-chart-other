@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Angular JS</title>
+<script type="text/javascript" src="angular.min.js"></script>
+<link rel="stylesheet" href="bootstrap.min.css"/>
+</head>
+<body>
+
+	<div ng-app="myApp" ng-controller="appCtrl" >
+		<div class="container">
+			<h2 class="col-xs-8"> test </h2>
+			
+			<button class="btn-success active glyphicon-asterisk" ></button>
+		</div>
+		
+		<span>{{result}}</span>
+		<br>
+		<span>{{result2}}</span>
+		
+	</div>
+	
+	<script type="text/javascript">
+		var app = angular.module('myApp',[]);
+
+		app.value('defaultValue',45);
+		
+		//###############################
+		//第一种方法  ，通过provider 来创建service
+		app.config(function($provide){
+			$provide.provider('ProvideService',function(){
+				this.$get = function(){
+					var factory ={};
+					console.log('config init');
+					factory.multiply = function(a,b){
+						return a*b;
+					}
+					return factory;
+				}
+			});
+			
+		});
+
+		app.provider('testProvider',function(){
+			console.log("init provider");
+			var f = function (){
+				return 'ok';
+			}
+			this.$get = function (){
+				return f;
+			}
+		});
+		//###############################
+
+		//第二种方法
+		app.factory('MathService',function(){
+			var factory = {};
+			console.log('factory init');
+			factory.multiply = function(a, b){
+				return a * b;
+			}
+			return factory;
+		});
+
+		app.service('CalcService', function(MathService,ProvideService){
+			console.log('service init');
+			this.square = function(a){
+				return MathService.multiply(a,a);
+			}
+			this.square2 =function(a){
+				return ProvideService.multiply(a,a);
+			}
+		});
+
+		//###############################
+		
+		/**
+		一定要将 service 或者  变量注入到方法的入参中
+		*/
+		app.controller('appCtrl',function($scope,defaultValue,CalcService,testProvider){
+			$scope.number = defaultValue;
+		
+			//提供一个result : 从servcie 中计算出结果,相当于一个默认值
+			$scope.result = CalcService.square($scope.number);
+			
+			$scope.result2 =  CalcService.square2($scope.number);
+
+			testProvider();
+
+			$scope.square = function(){
+				$scope.result = CalcService.square($scope.number);
+			}
+
+			
+		});
+
+		
+	</script>
+
+</body>
+</html>
